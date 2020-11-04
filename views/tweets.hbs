@@ -1,0 +1,18 @@
+<h2>Les derniers tweets de {{name}}!</h2>
+
+<div class="container-fluid">
+    <a style="margin: 5px 20px 5px 20px;" id="next" href="/tweets/new" class="btn btn-primary">Nouveau tweet !</a>
+
+    {{#each listOfTweets}}
+    <div class="row" style="margin: 5px 20px 5px 20px;">
+        <div class="card" style="width: 100%; max-width: 50rem;">
+            <div class="card-body">
+                <h5 class="card-title">{{title}}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{user}}</h6>
+                <p class="card-text">{{content}}</p>
+                <a href="/tweets/{{id}}" class="card-link">Voir ce tweet</a>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+</div>
