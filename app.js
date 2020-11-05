@@ -2,15 +2,18 @@
 const express = require('express');
 const logger = require('morgan');
 const path = require('path');
-const tweets = require('./tweets.json');
 const { v4: uuidv4 } = require('uuid');
 const axios = require('axios');
 const { response } = require('express');
+const connect = require('./database/mongodb');
+const Tweet = require('./models/tweet');
 
 // on construit notre application qui nous servira à créer nos routes
 const app = express();
 // on donne un port sur lequel notre serveur écoute
 const port = 3000;
+
+connect();
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -30,7 +33,11 @@ app.get('/tweets/new', (req, res) => {
     res.render('new');
 });
 
-app.get('/tweets', (req, res) => {
+app.get('/tweets', async (req, res) => {
+
+    // on va devoir récupérer depuis la base de données nos tweets ...
+    const tweets = await Tweet.find().sort({ createdAt: -1 });
+
     res.render('tweets', { tweets });
 })
 
@@ -40,17 +47,22 @@ app.get('/tweets/:id', async (req, res) => {
     // ici aussi on `await` bien la fonction asynchrone ! 
     const users = await getRandomUsers(3);
 
-    const tweet = tweets.find((elem) => {
-        return elem.id === id;
-    });
+    const tweet = await Tweet.findById(id);
 
     res.render('tweet', { tweet: tweet, users: users });
 });
 
-app.post('/tweets', (req, res) => {
-    const tweet = req.body;
-    tweet.id = uuidv4();
-    tweets.push(tweet);
+app.post('/tweets', async (req, res) => {
+    const paramTweet = req.body;
+
+    const tweet = new Tweet({
+        title: paramTweet.title,
+        content: paramTweet.content,
+        user: paramTweet.user,
+        createdAt: new Date(),
+    });
+    await tweet.save();
+
     res.redirect('/tweets');
 });
 
