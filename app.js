@@ -4,7 +4,7 @@ const logger = require('morgan');
 const path = require('path');
 const tweets = require('./tweets.json');
 const { v4: uuidv4 } = require('uuid');
-
+const axios = require('axios');
 
 // on construit notre application qui nous servira à créer nos routes
 const app = express();
@@ -25,6 +25,10 @@ app.get('/', (req, res) => {
     res.render('index', { name: 'TweetJs' });
 });
 
+app.get('/tweets/new', (req, res) => {
+    res.render('new');
+});
+
 app.get('/tweets/:id', (req, res) => {
     const id = req.params.id;
 
@@ -33,25 +37,6 @@ app.get('/tweets/:id', (req, res) => {
     });
 
     res.render('tweet', { tweet: tweet });
-});
-
-
-app.get('/tweets', (req, res) => {
-
-    req.query.id;
-
-    res.render('tweets', { listOfTweets: tweets, name: 'TweetJS' });
-});
-
-app.get('/tweets/new', (req, res) => {
-    res.render('new');
-});
-
-app.get('/tweets/:id', (req, res) => {
-    const id = req.params.id;
-    // id 
-
-    res.render('tweet', { tweet: tweet })
 });
 
 app.post('/tweets', (req, res) => {
