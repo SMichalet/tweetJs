@@ -7,4 +7,13 @@
 
     <a href="/tweets" class="card-link">Retour</a>
     {{/with}}
+
+    {{#if users}}
+    <p><b>Les utilisateurs suivant ont aimé ce tweet :</b></p>
+    {{#each users}}
+    <p>{{politness}} {{firstName}} {{lastName}} - {{email}}</p>
+    {{/each}}
+    {{else}}
+    <p><b>Personne n'a aimé ce tweet :-(</b></p>
+    {{/if}}
 </div>
